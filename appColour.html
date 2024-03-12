@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <style>
+        .container {
+            height: 85vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #square {
+            width: 60%;
+            height: 70%;
+            margin-bottom: 10px;
+            border-radius: 20px;
+            box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+        }
+
+        button {
+            appearance: button;
+            background-color: #1899D6;
+            border: solid transparent;
+            border-radius: 16px;
+            border-width: 0 0 4px;
+            box-sizing: border-box;
+            color: #FFFFFF;
+            cursor: pointer;
+            display: inline-block;
+            font-family: din-round, sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: .8px;
+            line-height: 20px;
+            margin: 0;
+            outline: none;
+            overflow: visible;
+            padding: 13px 16px;
+            text-align: center;
+            text-transform: uppercase;
+            touch-action: manipulation;
+            transform: translateZ(0);
+            transition: filter .2s;
+            user-select: none;
+            -webkit-user-select: none;
+            vertical-align: middle;
+            white-space: nowrap;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        button:after {
+            background-clip: padding-box;
+            background-color: #1CB0F6;
+            border: solid transparent;
+            border-radius: 16px;
+            border-width: 0 0 4px;
+            bottom: -4px;
+            content: "";
+            left: 0;
+            position: absolute;
+            right: 0;
+            top: 0;
+            z-index: -1;
+        }
+
+        button:main,
+        button:focus {
+            user-select: auto;
+        }
+
+        button:hover:not(:disabled) {
+            filter: brightness(1.1);
+            -webkit-filter: brightness(1.1);
+        }
+
+        button:disabled {
+            cursor: auto;
+        }
+
+        button:active {
+            border-width: 4px 0 0;
+            background: none;
+        }
+
+        h1,
+        p {
+            font-family: Arial, Helvetica, sans-serif;
+            color: darkgray;
+        }
+
+        h1 {
+            font-weight: bold;
+        }
+
+        .toastClass {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+    </style>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <title>Colour Application</title>
+</head>
+
+<body>
+    <h1>Colour Picker Guessing Game</h1>
+    <p>Think you know your hexadecimal colours? Prepare to be tested...</p>
+    <div class="container">
+        <div id="square"></div>
+        <div id="btnContainer"></div>
+
+    </div>
+</body>
+<script>
+    var successOptions = {
+        text: "Nice one!",
+        duration: 2000,  // Duration in milliseconds
+        gravity: "top", // Position: 'top', 'bottom', 'left', 'right'
+        position: 'right', // Alignment within the gravity
+        backgroundColor: "green", // Background color
+        className: "toastClass"
+    };
+
+    var failOptions = {
+        text: "Sorry that's wrong :(",
+        duration: 2000,  // Duration in milliseconds
+        gravity: "top", // Position: 'top', 'bottom', 'left', 'right'
+        position: 'right', // Alignment within the gravity
+        backgroundColor: "red", // Background color
+        className: "toastClass"
+    };
+
+    var randomColourArray = [];
+    generateRandomHexArray();
+    var randomNumber = Math.floor(Math.random() * 3);
+    var assignedColour = document.getElementById('square').style.backgroundColor = randomColourArray[randomNumber];
+
+    function selectColour(colour) {
+        if (colour === assignedColour) {
+            Toastify(successOptions).showToast();
+        } else {
+            Toastify(failOptions).showToast();
+        }
+
+        generateRandomHexArray();
+        randomNumber = Math.floor(Math.random() * 3);
+        assignedColour = document.getElementById('square').style.backgroundColor = randomColourArray[randomNumber];
+    }
+
+    function generateRandomHexArray() {
+        var buttons = document.querySelectorAll('button');
+
+        // Remove each button 
+        buttons.forEach(function (button) {
+            button.remove();
+        });
+
+        // Push three new hex colours to an array
+        randomColourArray = [];
+        for (let i = 0; i <= 2; i++) {
+            let n = (Math.random() * 0xfffff * 1000000).toString(16);
+            randomColourArray.push('#' + n.slice(0, 6));
+        }
+
+        // Add random colours in array to buttons on page
+        randomColourArray.forEach(element => {
+            var button = document.createElement("button");
+            button.id = element;
+            var text = document.createTextNode(element);
+            button.appendChild(text);
+            btnContainer.appendChild(button);
+
+            button.addEventListener("click", function () {
+                selectColour(element);
+            });
+        });
+    }
+
+</script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+</html>
